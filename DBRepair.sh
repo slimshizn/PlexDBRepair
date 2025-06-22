@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.11.05                                                  #
-# Date:       05-Jun-2025                                               #
+# Version:    v1.11.06                                                  #
+# Date:       22-Jun-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.11.05"
+Version="v1.11.06"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -64,6 +64,9 @@ DFFLAGS="-m"
 
 # If LC_ALL is null,  default to C
 [ "$LC_ALL" = "" ] && export LC_ALL=C
+
+# Check Restart
+[ "$DBRepairRestartedAfterUpdate" = "" ] && DBRepairRestartedAfterUpdate=0
 
 # Universal output function
 Output() {
@@ -2314,7 +2317,7 @@ do
       88|upda*)
 
         # Don't update again after restarting after updating
-        if [ "$DBRepairRestartedAfterUpdate" = "1" ]; then
+        if [ $DBRepairRestartedAfterUpdate -eq 1 ]; then
           Output "Already updated.  Continuing."
           WriteLog "Update - Ignore Update request after updating."
           continue
@@ -2344,7 +2347,7 @@ do
               if [ $Scripted -eq 0 ] && ConfirmYesNo "Restart and use $LatestVersion ?" ; then
                 WriteLog "Restarting after upgrade"
                 Output   "Restarting"
-                export DBRepairRestartedAfterUpdate="1"
+                export DBRepairRestartedAfterUpdate=1
                 exec "$0" "$@"
               else
                 Output "Restart to launch updated DBRepair.sh ($LatestVersion)"

@@ -8,6 +8,10 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.11.06
+
+  1. Restart after update - Correct missing variable initialization.
+
 v1.11.05
 
   1. Remove menu option   - Deflate menu option wasn't previously removed.  Now removed.
