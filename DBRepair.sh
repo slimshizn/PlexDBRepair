@@ -680,8 +680,8 @@ HostConfig() {
     RootRequired=1
 
     HaveStartStop=1
-    StartCommand="/usr/sbin/service plexmediaserver${BsdService} start"
-    StopCommand="/usr/sbin/service plexmediaserver${BsdService} stop"
+    StartCommand="/usr/sbin/service ${BsdService} start"
+    StopCommand="/usr/sbin/service ${BsdService} stop"
 
     HostType="FreeBSD"
     return 0
