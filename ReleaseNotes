@@ -8,6 +8,11 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.11.07
+
+  1. Add support FreeBSD  - Add support for FreeBSD (14+)
+                            Thanks to @cdf-eagles for the work.
+
 v1.11.06
 
   1. Restart after update - Correct missing variable initialization.
