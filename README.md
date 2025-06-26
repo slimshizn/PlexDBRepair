@@ -92,12 +92,13 @@ Enter command # -or- command name (4 char min) :
            - BINHEX
            - HOTIO
            - Podman (libgpod)
-        4. Linux workstation & server
-        5. MacOS
-        6. Netgear (OS5 Linux-based systems)
-        7. QNAP (QTS & QuTS)
-        8. Synology (DSM 6 & DSM 7)
-        9. Western Digital (OS5)
+        4. FreeBSD (14+)
+        5. Linux workstation & server
+        6. MacOS
+        7. Netgear (OS5 Linux-based systems)
+        8. QNAP (QTS & QuTS)
+        9. Synology (DSM 6 & DSM 7)
+       10. Western Digital (OS5)
 ```
  # Installation
 
@@ -116,6 +117,7 @@ Enter command # -or- command name (4 char min) :
     Binhex             | N/A                 |  Container root (adjacent /config)
     Docker (Plex,LSIO) | N/A                 |  Container root (adjacent /config)
     Hotio              | N/A                 |  Container root (adjacent /config)
+    FreeBSD (14+)      | N/A                 |  Anywhere
     Kubernetes         | N/A                 |  Container root (adjacent /config)
     Linux (wkstn/svr)  | N/A                 |  Anywhere
     MacOS              | N/A                 |  Anywhere

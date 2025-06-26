@@ -2,8 +2,8 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.11.06                                                  #
-# Date:       22-Jun-2025                                               #
+# Version:    v1.11.07                                                  #
+# Date:       25-Jun-2025                                               #
 #########################################################################
 
 # Version for display purposes
@@ -647,14 +647,14 @@ HostConfig() {
       # Use FreeBSD RC configuration to set paths
       if [ "x$plexmediaserver_plexpass_support_path" != "x" ]; then
         DBDIR="${plexmediaserver_plexpass_support_path}/Plex Media Server/Plug-in Support/Databases"
-        CACHEDIR="${plexmediaserver_plexpass_support_path}/Cache"
+        CACHEDIR="${plexmediaserver_plexpass_support_path}/Plex Media Server/Cache"
       elif [ "x$plexmediaserver_support_path" != "x" ]; then
         DBDIR="${plexmediaserver_support_path}/Plex Media Server/Plug-in Support/Databases"
-        CACHEDIR="${plexmediaserver_support_path}/Cache"
+        CACHEDIR="${plexmediaserver_support_path}/Plex Media Server/Cache"
       else
         # System is using default Ports package configuration paths
         DBDIR="/usr/local/plexdata${BsdPlexPass}/Plex Media Server/Plug-in Support/Databases"
-        CACHEDIR="/usr/local/plexdata${BsdPlexPass}/Cache"
+        CACHEDIR="/usr/local/plexdata${BsdPlexPass}/Plex Media Server/Cache"
       fi
 
       # Where is the software
