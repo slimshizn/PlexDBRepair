@@ -8,6 +8,10 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.11.08
+
+  1. Restart after update - Sometimes restart after update would reference the wrong path. Fixed.
+
 v1.11.07
 
   1. Add support FreeBSD  - Add support for FreeBSD (14+)
