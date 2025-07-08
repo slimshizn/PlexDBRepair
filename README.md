@@ -268,14 +268,10 @@ Attention:
    --  This is for when DB operations keep getting worse and you don't know what to do.
        "99" is an old 'Get Smart' TV series reference where agent 99 would try to save agent 86 from harm.
 
-  "99" was originally going to be "Quit immediately save all files" but development feedback
-  resulted in this configuration
+  Community feedback has resulted in:
 
-  "Exit" is the preferred method to leave.
-
-  "Quit" was desired instead of "99" but there are those who didn't understand the difference or references.
-
-  If community feedback wants both "Quit. save temps" and "Exit, delete temps", behavior is easily changed.
+    "99" or "Exit" - Preferred way to exit and cleanup temp databases
+    "98" or "Quit" - Get out now without deleting the temp databases (Usually used only during unexpected failures)
 
   Also please be aware the script understands interactive versus scripted mode.
 

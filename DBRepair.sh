@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.11.07                                                  #
-# Date:       25-Jun-2025                                               #
+# Version:    v1.11.08                                                  #
+# Date:       06-Jul-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.11.07"
+Version="v1.11.08"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -2408,7 +2408,7 @@ do
                 WriteLog "Restarting after upgrade"
                 Output   "Restarting"
                 export DBRepairRestartedAfterUpdate=1
-                exec "$0" "$@"
+                exec "$ScriptWorkingDirectory/$ScriptName" "$*"
               else
                 Output "Restart to launch updated DBRepair.sh ($LatestVersion)"
                 WriteLog "Update   - Updated to version $LatestVersion."
