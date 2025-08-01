@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.11.08                                                  #
-# Date:       06-Jul-2025                                               #
+# Version:    v1.11.09                                                  #
+# Date:       31-Jul-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.11.08"
+Version="v1.11.09"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -719,7 +719,7 @@ HostConfig() {
       AppSuppDir="/config"
       PID_FILE="$AppSuppDir/plexmediaserver.pid"
       DBDIR="$AppSuppDir/Plug-in Support/Databases"
-      CACHEDIR="$AppSuppDir/Plex Media Server/Cache/PhotoTranscoder"
+      CACHEDIR="$AppSuppDir/Cache/PhotoTranscoder"
       LOGFILE="$DBDIR/DBRepair.log"
       LOG_TOOL="logger"
 
