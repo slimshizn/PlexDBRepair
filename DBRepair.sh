@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.11.09                                                  #
-# Date:       31-Jul-2025                                               #
+# Version:    v1.12.00                                                  #
+# Date:       06-Oct-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.11.09"
+Version="v1.12.00"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -1405,6 +1405,183 @@ DoReplace() {
   fi
 }
 
+##### Deflate
+DoDeflate() {
+
+    Damaged=0
+    Fail=0
+
+    # Verify DBs are here
+    if [ ! -e $CPPL.db ]; then
+      Output "No main Plex database exists to deflate. Exiting."
+      WriteLog "Deflate  - No main database - FAIL"
+      Fail=1
+      return 1
+    fi
+
+    # Check size
+    Size=$(stat $STATFMT $STATBYTES $CPPL.db)
+
+    # Exit if not valid
+    if [ $Size -lt 300000 ]; then
+      Output "Main database is too small/truncated, deflate is not possible.  Please try restoring a backup. "
+      WriteLog "Deflate  - Main databse too small - FAIL"
+      Fail=1
+      return 1
+    fi
+
+    # Calculate DBsize in GB
+    DBSize=$(( $Size / 1000000000 + 2 ))
+    # Continue
+    DoUpdateTimestamp
+    #Output "Backing up databases using timestamp: $TimeStamp"
+
+    # Make a backup
+    if ! MakeBackups "Deflate"; then
+      Output "Error making backups.  Cannot continue."
+      WriteLog "Deflate - MakeBackups - FAIL"
+      Fail=1
+      return 1
+    else
+      WriteLog "Deflate - MakeBackups - PASS"
+    fi
+
+    # Inform user
+    Output "Starting Deflate (Part 1 of 2 - Repair database table)"
+    Output "  This should take approx $((DBSize / 2)) minutes but is I/O speed dependent"
+    Output ""
+    WriteLog "Deflate - Start Deflate Pass 1"
+
+    # Library and blobs successfully exported, create new
+    "$PLEX_SQLITE" "$TMPDIR/$CPPL.db-BACKUP-$TimeStamp" << EOF
+    -- Exclusive DB access
+    BEGIN IMMEDIATE;
+
+    -- Create new table
+    CREATE TABLE temp_bandwidth (
+      id INTEGER PRIMARY KEY,
+      account_id INTEGER,
+      device_id INTEGER,
+      timespan INTEGER,
+      at INTEGER,
+      lan INTEGER,
+      bytes INTEGER
+    );
+
+    -- Copy good data to new table
+    INSERT INTO temp_bandwidth (
+      account_id, device_id, timespan, at, lan, bytes
+      )
+      SELECT account_id, device_id, timespan, at, COALESCE(lan, 0), bytes
+      FROM statistics_bandwidth WHERE account_id not null;
+
+    -- Swap new for old
+    DROP TABLE statistics_bandwidth;
+    ALTER TABLE temp_bandwidth RENAME TO statistics_bandwidth;
+
+    -- Create Indexes
+    CREATE INDEX IF NOT EXISTS index_statistics_bandwidth_on_at
+    ON statistics_bandwidth(at);
+
+    CREATE INDEX IF NOT EXISTS index_statistics_bandwidth_on_account_id_and_timespan_and_at
+    ON statistics_bandwidth(account_id, timespan, at);
+
+    -- Make it so
+    COMMIT;
+EOF
+    Result=$?
+    if [ $Result -ne 0 ]; then
+      Output "Error: Could not correct statistics_bandwidth table (error $Result)"
+      Output "       Please seek additional help"
+      WriteLog "Deflate: Error $Result during dodeflate."
+      Fail=1
+      return $Fail
+    fi
+
+    # Vacuum the DB to the new DB
+    Output "PMS main database successfully repaired."
+    Output "Starting Deflate (Part 2 of 2 - Reduce size)"
+    WriteLog "Deflate - Start Deflate Pass 2"
+
+    "$PLEX_SQLITE" "$TMPDIR/$CPPL.db-BACKUP-$TimeStamp" \
+      "VACUUM main into '$TMPDIR/$CPPL.db-DEFLATE-$TimeStamp'"
+    Result=$?
+
+    # Good result?
+    if [ $Result -eq 0 ]; then
+      Output "PMS main database size reduced."
+      WriteLog "Deflate - PMS main vacuum successful."
+      Output "Verifying PMS main database."
+      if CheckDB "$TMPDIR/$CPPL.db-DEFLATE-$TimeStamp" ; then
+        SizeStart=$(GetSize "$CPPL.db")
+        SizeFinish=$(GetSize "$TMPDIR/$CPPL.db-DEFLATE-$TimeStamp")
+        Output "Verification complete.  PMS main database is OK."
+        Output "PMS main database reduced from $SizeStart MB to $SizeFinish MB"
+        WriteLog "Deflate - Verify main database - PASS (Size: ${SizeStart} MB / ${SizeFinish} MB."
+      else
+        Output "Verification complete.  PMS main database import failed."
+        WriteLog "Deflate - Verify main database - FAIL ($SQLerror)"
+        Fail=1
+      fi
+    else
+      Output "Error: Error code $Result while vacuuming PMS main DB file."
+      Output "       Please seek additional help."
+      return $Fail
+    fi
+
+    # If not failed,  move files normally
+    if [ $Fail -eq 0 ]; then
+
+      Output "Saving current main database with '-BLOATED-$TimeStamp'"
+      [ -e $CPPL.db ]        && mv $CPPL.db       "$TMPDIR/$CPPL.db-BLOATED-$TimeStamp"
+      #[ -e $CPPL.blobs.db ] && mv $CPPL.blobs.db "$TMPDIR/$CPPL.blobs.db-BLOATED-$TimeStamp"
+
+      Output "Making deflated database active"
+      WriteLog "Deflate - Making deflated database active"
+      mv "$TMPDIR/$CPPL.db-DEFLATE-$TimeStamp"       $CPPL.db
+
+      # Ensure WAL and SHM are gone
+      [ -e $CPPL.blobs.db-wal ] && rm -f $CPPL.blobs.db-wal
+      [ -e $CPPL.blobs.db-shm ] && rm -f $CPPL.blobs.db-shm
+      [ -e $CPPL.db-wal ]       && rm -f $CPPL.db-wal
+      [ -e $CPPL.db-shm ]       && rm -f $CPPL.db-shm
+
+      # Set ownership on new files
+      chmod $Perms $CPPL.db $CPPL.blobs.db
+      chown $Owner $CPPL.db $CPPL.blobs.db
+      Result=$?
+      if [ $Result -ne 0 ]; then
+        Output "ERROR:  Cannot set permissions on new databases. Error $Result"
+        Output "        Please exit tool, keeping temp files, seek assistance."
+        Output "        Use files: $TMPDIR/*-DEFLATE-$TimeStamp"
+        WriteLog "Deflate - Move files - FAIL"
+        Fail=1
+        return 1
+      fi
+
+      # We didn't fail, set CheckedDB status true (passed above checks)
+      CheckedDB=1
+
+      WriteLog "Deflate - Move files - PASS"
+      WriteLog "Deflate - PASS"
+
+
+      Output "PMS main database deflate completed."
+
+
+      SetLast "Deflate" "$TimeStamp"
+      return 0
+    else
+
+      rm -f "$TMPDIR/$CPPL.db-REPAIR-$TimeStamp"
+      rm -f "$TMPDIR/$CPPL.blobs.db-REPAIR-$TimeStamp"
+
+      Output "Deflate has failed.  No files changed"
+      WriteLog "Deflate - $TimeStamp - FAIL"
+      CheckedDB=0
+      return 1
+    fi
+}
 
 ##### VACUUM
 DoVacuum(){
@@ -1655,7 +1832,7 @@ DoStop(){
   else
 
     if IsRunning; then
-     Output "Stopping PMS."
+     Output "Stopping PMS. (60 second max delay)"
     else
      Output "PMS already stopped."
      return 0
@@ -1672,7 +1849,7 @@ DoStop(){
     Count=10
     while IsRunning && [ $Count -gt 0 ]
     do
-      sleep 3
+      sleep 6
       Count=$((Count - 1))
     done
 
@@ -1682,7 +1859,7 @@ DoStop(){
       return 0
     else
       WriteLog "Stop    - FAIL (Timeout)"
-      Output   "Could not stop PMS. PMS did not shutdown within 30 second limit."
+      Output   "Could not stop PMS. PMS did not shutdown within 60 second limit."
     fi
   fi
   return $Result
@@ -2019,7 +2196,8 @@ do
       echo " 12 - 'undo'      - Undo last successful command."
 
       echo ""
-      echo " 21 - 'prune'     - Remove old image files (jpeg,jpg,png) from PhotoTranscoder cache & all temp files left by PMS."
+      echo " 21 - 'prune'     - Remove old image files from PhotoTranscoder cache & all temp files left by PMS."
+      echo " 23 - 'deflate'   - Deflate a bloated PMS main database."
       [ $IgnoreErrors -eq 0 ] && echo " 42 - 'ignore'    - Ignore duplicate/constraint errors."
       [ $IgnoreErrors -eq 1 ] && echo " 42 - 'honor'     - Honor all database errors."
 
@@ -2110,6 +2288,7 @@ do
         else
           WriteLog "Check   - FAIL"
           CheckedDB=0
+          continue
         fi
 
         # Now Repair
@@ -2334,6 +2513,59 @@ do
         WriteLog "Prune   - START"
         DoPrunePhotoTranscoder
         WriteLog "Prune   - PASS"
+        ;;
+
+
+      # Deflate the DB because Plex isn't doing a good job during scheduled tasks.
+      23|defl*)
+
+        # Check if PMS running
+        if IsRunning; then
+          WriteLog "Deflate - FAIL - PMS runnning"
+          Output   "Unable to deflate.  PMS is running. Please stop PlexMediaServer."
+          continue
+        fi
+
+        # Is there enough room to work
+        if ! FreeSpaceAvailable; then
+          WriteLog "Deflate - FAIL - Insufficient free space on $AppSuppDir"
+          Output   "Error:   Unable to deflate.  Insufficient free space available on $AppSuppDir"
+          Output   "         Space needed = $SpaceNeeded MB,  Space available = $SpaceAvailable MB"
+          continue
+        fi
+
+        # Start auto
+        Output "Check and Deflate started."
+        WriteLog "Deflate - START"
+
+        # Check the databases (forced)
+        Output ""
+        if CheckDatabases "Check  " force ; then
+          WriteLog "Check   - PASS"
+          CheckedDB=1
+        else
+          WriteLog "Check   - FAIL"
+          CheckedDB=0
+        fi
+
+        # Now Deflate
+        Output ""
+        if ! DoDeflate; then
+
+          WriteLog "Deflate - FAIL"
+          CheckedDB=0
+
+          Output "Deflate failed. Please repair using Automatic mode."
+          continue
+        else
+          WriteLog "Deflate - PASS"
+          CheckedDB=1
+        fi
+
+        # All good to here
+        WriteLog "Deflate - PASS"
+        Output   "Deflate successful."
+        Output   "Recommend running "Auto" next to complete optimization of new database."
         ;;
 
 
