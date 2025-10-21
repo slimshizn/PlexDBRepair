@@ -113,7 +113,7 @@ Enter command # -or- command name (4 char min) :
     -------------------+---------------------+------------------------------------------
     Apple              | Downloads           |  ~/Downloads
     Arch Linux         | N/A                 |  Anywhere
-    ASUSTOR            | Public              |  /volume1/Public
+    ASUSTOR            | Plex                |  /volume1/Plex
     Binhex             | N/A                 |  Container root (adjacent /config)
     Docker (Plex,LSIO) | N/A                 |  Container root (adjacent /config)
     Hotio              | N/A                 |  Container root (adjacent /config)
@@ -226,10 +226,9 @@ These examples
     3. (6)  Reindex - Generate new indexes so PMS doesn't need to at startup
     4. (99) Exit
 
-  C. Database sizes excessively large when compared to amount of media indexed (item count)
-    1. (3)  Check   - Make certain both databases are fully intact  (repair if needed)
-    2. (4)  Vacuum  - Instruct SQLite to rebuild its tables and recover unused space.
-    3. (6)  Reindex - Rebuild Indexes.
+  C. Database sizes excessively large/bloated when compared to amount of media indexed (item count)
+    1. (23) Deflate - Correct the known problem with a database table and recover the wasted space.
+    2. (2)  Auto    - Perform automated check, repair, and reindex of the deflated database
     4. (99) Exit
 
   D. User interface has become 'sluggish' as more media was added
@@ -348,7 +347,9 @@ Select
  11 - 'status'    - Report status of PMS (run-state and databases).
  12 - 'undo'      - Undo last successful command.
 
- 21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache.
+ 21 - 'prune'     - Remove old image files (jpeg,jpg,png) from PhotoTranscoder cache & all temp files left by PMS.
+ 22 - 'purge'     - Remove unused temp files.
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 
  88 - 'update'    - Check for updates.
@@ -376,7 +377,9 @@ Select
  11 - 'status'    - Report status of PMS (run-state and databases).
  12 - 'undo'      - Undo last successful command.
 
- 21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache.
+ 21 - 'prune'     - Remove old image files (jpeg,jpg,png) from PhotoTranscoder cache & all temp files left by PMS.
+ 22 - 'purge'     - Remove unused temp files.
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 
  88 - 'update'    - Check for updates.
@@ -430,7 +433,9 @@ Select
  11 - 'status'    - Report status of PMS (run-state and databases).
  12 - 'undo'      - Undo last successful command.
 
- 21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache.
+ 21 - 'prune'     - Remove old image files (jpeg,jpg,png) from PhotoTranscoder cache & all temp files left by PMS.
+ 22 - 'purge'     - Remove unused temp files.
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 
  88 - 'update'    - Check for updates.
@@ -458,7 +463,9 @@ Select
  11 - 'status'    - Report status of PMS (run-state and databases).
  12 - 'undo'      - Undo last successful command.
 
- 21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache.
+ 21 - 'prune'     - Remove old image files (jpeg,jpg,png) from PhotoTranscoder cache & all temp files left by PMS.
+ 22 - 'purge'     - Remove unused temp files.
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 
  88 - 'update'    - Check for updates.
@@ -489,7 +496,9 @@ Select
  11 - 'status'    - Report status of PMS (run-state and databases).
  12 - 'undo'      - Undo last successful command.
 
- 21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache.
+ 21 - 'prune'     - Remove old image files (jpeg,jpg,png) from PhotoTranscoder cache & all temp files left by PMS.
+ 22 - 'purge'     - Remove unused temp files.
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 
  88 - 'update'    - Check for updates.
@@ -635,6 +644,13 @@ root@lizum:/sata/plex/Plex Media Server/Plug-in Support/Databases#
 ### Check
 
   Checks the integrity of the Plex main and blobs databases.
+
+### Deflate
+
+  Repairs a known error in the PMS main database "statistics_bandwidth" table.
+  After repairing it,  it purges all the errant data from the table (reducing DB size)
+
+  This task can take a significant amount of time.  It's frequently used when the DB size is an order of magnitude above what it should be (e.g.  31 GB vs 206 MB).  Reductions from 134 GB to 210 MB have been realized.
 
 ### Exit
 
@@ -935,6 +951,8 @@ Select
 
  21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache older than specific age.
  22 - 'purge'     - Purge (remove) all temporary files left by PMS & Transcoder in Temp Dir.'
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
+
 
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 

@@ -8,9 +8,21 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.12.00
+
+  1. Deflate capability   - Deflate a bloated PMS main database and retain bandwidth statistics.
+                            Recommended usage:  "Deflate" followed by "Auto" to optimize the DB after reduction.
+                          - Method changed to reconstruction of bandwidth table versus selective copy.
+                            This results in correct operation of bandwidth statistics functionality
+                            as well as significantly improved performance.
+
+  2. ASUSTOR              - Documentation error README.md corrected
+
+
 v1.11.09
 
   1. HotIO Paths          - Path defined for Cache dir (and PhotoTranscoder) incorrect.  Fixed.
+
 v1.11.08
 
   1. Restart after update - Sometimes restart after update would reference the wrong path. Fixed.
