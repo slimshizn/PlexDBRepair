@@ -31,6 +31,7 @@ If sufficient privleges exist (root), and supported by the environment, the opti
 ```
    AUTO(matic)  - Automatically check, repair/optimize, and reindex the databases in one step.
    CHEC(k)      - Check the main and blob databases integrity
+   DEFL(ate)    - Deflate a bloated PMS database (faulty statistics data)
    EXIT         - Exit the utility
    IGNOre/HONOr - Ignore/Honor constraint errors when IMPORTing additional data into DB.
    IMPO(rt)     - Import viewstate / watch history from another database
@@ -72,6 +73,7 @@ If sufficient privleges exist (root), and supported by the environment, the opti
 
  21 - 'prune'     - Prune (remove) old image files (jpeg,jpg,png) from PhotoTranscoder cache.
  22 - 'purge'     - Purge (delete) all temporary files left behind by PMS & the transcoder.
+ 23 - 'deflate'   - Deflate a bloated PMS main database.
  42 - 'ignore'    - Ignore duplicate/constraint errors.
 
  88 - 'update'    - Check for updates.
@@ -226,18 +228,18 @@ These examples
     3. (6)  Reindex - Generate new indexes so PMS doesn't need to at startup
     4. (99) Exit
 
-  C. Database sizes excessively large/bloated when compared to amount of media indexed (item count)
+  D. Database sizes excessively large/bloated when compared to amount of media indexed (item count)
     1. (23) Deflate - Correct the known problem with a database table and recover the wasted space.
     2. (2)  Auto    - Perform automated check, repair, and reindex of the deflated database
     4. (99) Exit
 
-  D. User interface has become 'sluggish' as more media was added
+  E. User interface has become 'sluggish' as more media was added
     1. (3)  Check   - Confirm there is no database damage
     2. (5)  Repair  - You are not really repairing.  You are rebuilding the DB in perfect sorted order.
     3. (6)  Reindex - Rebuild Indexes.
     4. (99) Exit
 
-  E. Undo
+  F. Undo
     Undo is a special case where you need the utility to backup ONE step.
     This is rarely needed.  The only time you might want/need to backup one step is if Replace leaves you worse off
     than you were before. In this case, UNDO then Repair.  Undo can only undo the single most-recent action.
@@ -829,55 +831,77 @@ root@lizum:/sata/plex/Plex Media Server/Plug-in Support/Databases#
   1.  Remove the environment variable.
   2.  Run DBRepair again using "automatic".  Your databases will revert to the host OS's default.
 
-### Usage:  (Linux example shown)
+### Usage:  (QNAP example shown)
 
 ```
 # export DBREPAIR_PAGESIZE=65534
-# ./DBRepair.sh stop auto start exit
+# ./DBRepair.sh stop deflate auto start exit
 
 
 
-      Database Repair Utility for Plex Media Server (Ubuntu 22.04.3 LTS)
-                       Version v1.03.01
+      Database Repair Utility for Plex Media Server  (QNAP)
+                       Version v1.12.00
 
 
-[2024-01-14 17.25.35] Stopping PMS.
-[2024-01-14 17.25.35] Stopped PMS.
+[2025-10-21 16.54.00] PMS already stopped.
 
-[2024-01-14 17.25.35] Automatic Check,Repair,Index started.
-[2024-01-14 17.25.35]
-[2024-01-14 17.25.35] Checking the PMS databases
-[2024-01-14 17.25.48] Check complete.  PMS main database is OK.
-[2024-01-14 17.25.48] Check complete.  PMS blobs database is OK.
-[2024-01-14 17.25.48]
-[2024-01-14 17.25.48] Exporting current databases using timestamp: 2024-01-14_17.25.35
-[2024-01-14 17.25.48] Exporting Main DB
-[2024-01-14 17.25.59] Exporting Blobs DB
-[2024-01-14 17.26.00] Successfully exported the main and blobs databases.  Proceeding to import into new databases.
-[2024-01-14 17.26.00] Importing Main DB.
-[2024-01-14 17.26.00] Setting Plex SQLite page size (65536)
-[2024-01-14 17.26.29] Importing Blobs DB.
-[2024-01-14 17.26.29] Setting Plex SQLite page size (65536)
-[2024-01-14 17.26.30] Successfully imported databases.
-[2024-01-14 17.26.30] Verifying databases integrity after importing.
-[2024-01-14 17.27.43] Verification complete.  PMS main database is OK.
-[2024-01-14 17.27.43] Verification complete.  PMS blobs database is OK.
-[2024-01-14 17.27.43] Saving current databases with '-BACKUP-2024-01-14_17.25.35'
-[2024-01-14 17.27.43] Making repaired databases active
-[2024-01-14 17.27.43] Repair complete. Please check your library settings and contents for completeness.
-[2024-01-14 17.27.43] Recommend:  Scan Files and Refresh all metadata for each library section.
-[2024-01-14 17.27.43]
-[2024-01-14 17.27.43] Backing up of databases
-[2024-01-14 17.27.43] Backup current databases with '-BACKUP-2024-01-14_17.27.43' timestamp.
-[2024-01-14 17.27.44] Reindexing main database
-[2024-01-14 17.28.08] Reindexing main database successful.
-[2024-01-14 17.28.08] Reindexing blobs database
-[2024-01-14 17.28.08] Reindexing blobs database successful.
-[2024-01-14 17.28.08] Reindex complete.
-[2024-01-14 17.28.08] Automatic Check, Repair/optimize, & Index successful.
+[2025-10-21 16.54.00] Check and Deflate started.
+[2025-10-21 16.54.00]
+[2025-10-21 16.54.00] Checking the PMS databases
+[2025-10-21 16.54.19] Check complete.  PMS main database is OK.
+[2025-10-21 16.54.21] Check complete.  PMS blobs database is OK.
+[2025-10-21 16.54.21]
+[2025-10-21 16.54.21] Backup current databases with '-BACKUP-2025-10-21_16.54.21' timestamp.
+[2025-10-21 16.56.29] Starting Deflate (Part 1 of 2 - Repair database table)
+[2025-10-21 16.56.29] Estimated completion is approx 6 minutes but is CPU & I/O speed dependent
+[2025-10-21 16.56.29]
+[2025-10-21 16.56.30] PMS main database successfully repaired.
+[2025-10-21 16.56.30] Starting Deflate (Part 2 of 2 - Reduce size)
+[2025-10-21 16.56.35] PMS main database size reduced.
+[2025-10-21 16.56.35] Verifying PMS main database.
+[2025-10-21 16.56.50] Verification complete.  PMS main database is OK.
+[2025-10-21 16.56.50] PMS main database reduced from 31586 MB to 206 MB
+[2025-10-21 16.56.51] Saving current main database with '-BLOATED-2025-10-21_16.54.21'
+[2025-10-21 16.56.51] Making deflated database active
+[2025-10-21 16.56.51] PMS main database deflate completed.
+[2025-10-21 16.56.51] Deflate successful.
+[2025-10-21 16.56.51] Recommend running Auto next to complete optimization of new database.
 
-[2024-01-14 17.28.08] Starting PMS.
-[2024-01-14 17.28.08] Started PMS
+[2025-10-21 16.56.51] Automatic Check,Repair,Index started.
+[2025-10-21 16.56.51]
+[2025-10-21 16.56.51] Checking the PMS databases
+[2025-10-21 16.57.04] Check complete.  PMS main database is OK.
+[2025-10-21 16.57.05] Check complete.  PMS blobs database is OK.
+[2025-10-21 16.57.05]
+[2025-10-21 16.57.05] Exporting current databases using timestamp: 2025-10-21_16.56.51
+[2025-10-21 16.57.05] Exporting Main DB
+[2025-10-21 16.57.24] Exporting Blobs DB
+[2025-10-21 16.59.18] Successfully exported the main and blobs databases.
+[2025-10-21 16.59.18] Start importing into new databases.
+[2025-10-21 16.59.18] Importing Main DB.
+[2025-10-21 16.59.18] Setting Plex SQLite page size (65536)
+[2025-10-21 17.00.19] Importing Blobs DB.
+[2025-10-21 17.00.19] Setting Plex SQLite page size (65536)
+[2025-10-21 17.00.32] Successfully imported databases.
+[2025-10-21 17.00.32] Verifying databases integrity after importing.
+[2025-10-21 17.01.59] Verification complete.  PMS main database is OK.
+[2025-10-21 17.02.01] Verification complete.  PMS blobs database is OK.
+[2025-10-21 17.02.01] Saving current databases with '-BACKUP-2025-10-21_16.56.51'
+[2025-10-21 17.02.01] Making repaired databases active
+[2025-10-21 17.02.01] Repair complete. Please check your library settings and contents for completeness.
+[2025-10-21 17.02.01] Recommend:  Scan Files and Refresh all metadata for each library section.
+[2025-10-21 17.02.01]
+[2025-10-21 17.02.01] Backing up of databases
+[2025-10-21 17.02.01] Backup current databases with '-BACKUP-2025-10-21_17.02.01' timestamp.
+[2025-10-21 17.02.02] Reindexing main database
+[2025-10-21 17.02.13] Reindexing main database successful.
+[2025-10-21 17.02.13] Reindexing blobs database
+[2025-10-21 17.02.14] Reindexing blobs database successful.
+[2025-10-21 17.02.14] Reindex complete.
+[2025-10-21 17.02.14] Automatic Check, Repair/optimize, & Index successful.
+
+[2025-10-21 17.02.14] Starting PMS.
+[2025-10-21 17.02.14] Started PMS
 
 #
 ```
