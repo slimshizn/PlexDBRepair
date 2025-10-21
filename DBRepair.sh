@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.12.00                                                  #
-# Date:       06-Oct-2025                                               #
+# Version:    v1.12.01                                                  #
+# Date:       21-Oct-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.12.00"
+Version="v1.12.01"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -1448,7 +1448,7 @@ DoDeflate() {
 
     # Inform user
     Output "Starting Deflate (Part 1 of 2 - Repair database table)"
-    Output "  This should take approx $((DBSize / 2)) minutes but is I/O speed dependent"
+    Output "Estimated completion is $((DBSize / 3)) minutes but is CPU & I/O speed dependent"
     Output ""
     WriteLog "Deflate - Start Deflate Pass 1"
 
@@ -2194,13 +2194,11 @@ do
       echo " 10 - 'show'      - Show logfile."
       echo " 11 - 'status'    - Report status of PMS (run-state and databases)."
       echo " 12 - 'undo'      - Undo last successful command."
-
       echo ""
       echo " 21 - 'prune'     - Remove old image files from PhotoTranscoder cache & all temp files left by PMS."
       echo " 23 - 'deflate'   - Deflate a bloated PMS main database."
       [ $IgnoreErrors -eq 0 ] && echo " 42 - 'ignore'    - Ignore duplicate/constraint errors."
       [ $IgnoreErrors -eq 1 ] && echo " 42 - 'honor'     - Honor all database errors."
-
       echo ""
       echo " 88 - 'update'    - Check for updates."
       echo " 98 - 'quit'      - Quit immediately.  Keep all temporary files."
