@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.12.01                                                  #
-# Date:       21-Oct-2025                                               #
+# Version:    v1.13.00                                                  #
+# Date:       09-Nov-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.12.01"
+Version="v1.13.00"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -779,10 +779,15 @@ HostConfig() {
       LOGFILE="$DBDIR/DBRepair.log"
       LOG_TOOL="logger"
 
-      if grep rpcinterface /etc/supervisor.conf > /dev/null; then
+      if [ -e /etc/supervisor.conf ] && grep rpcinterface /etc/supervisor.conf > /dev/null; then
         HaveStartStop=1
         StartCommand="supervisorctl start plexmediaserver"
         StopCommand="supervisorctl stop plexmediaserver"
+
+      elif [ -e /etc/supervisord.conf ] && grep rpcinterface /etc/supervisord.conf > /dev/null; then
+        HaveStartStop=1
+        StartCommand="supervisorctl start start-script"
+        StopCommand="supervisorctl stop start-script"
       fi
 
       HostType="BINHEX"
