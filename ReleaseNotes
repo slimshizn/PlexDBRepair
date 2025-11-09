@@ -8,6 +8,14 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.13.00
+
+  1. Binhex containers    - Add support for updated 'supervisord' start/stop control.
+                            Maintain support for legacy 'supervisor' start/stop control.
+
+                            This will be removed in the next release
+                            Update your container before updating DBRepair.
+
 v1.12.00
 
   1. Deflate capability   - Deflate a bloated PMS main database and retain bandwidth statistics.
