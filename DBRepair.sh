@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.13.00                                                  #
-# Date:       09-Nov-2025                                               #
+# Version:    v1.13.01                                                  #
+# Date:       14-Nov-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.13.00"
+Version="v1.13.01"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -1891,7 +1891,7 @@ DoUpdateTimestamp() {
 GetLatestRelease() {
   Response=$(curl -sL "https://api.github.com/repos/ChuckPa/DBRepair/tags")
   if [ $? -eq 0 ]; then
-    LatestVersion="$(echo "$Response" | grep name | awk -F: '{print $2}' | sort -r | head -1 | tr -d \" | tr -d ' ' | tr -d ',')"
+    LatestVersion="$(echo "$Response" | grep name | awk -F: '{print $2}' | sort -rn | head -1 | tr -d \" | tr -d ' ' | tr -d ',')"
   else
     LatestVersion="$Version"
   fi

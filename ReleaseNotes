@@ -8,6 +8,11 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.13.01
+
+  1. Tag sort order       - Github tags are not guaranteed to be numeric or in most-recent order.
+                            This update sorts version tags numerically and in reverse order  to accommodate github shortcoming.
+
 v1.13.00
 
   1. Binhex containers    - Add support for updated 'supervisord' start/stop control.
