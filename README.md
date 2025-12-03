@@ -104,6 +104,14 @@ Enter command # -or- command name (4 char min) :
 ```
  # Installation
 
+### Downloading
+    Download DBRepair.sh (if you want just the script) 
+    # This overwrites any existing version.  Remove "-O DBRepair.sh" to not overwrite.
+```
+    wget -O DBRepair.sh https://github.com/ChuckPa/PlexDBRepair/releases/latest/download/DBRepair.sh
+```
+### Moving the downloaded DBRepair.sh
+
     Where to place the utility varies from host to host.
     Please use this table as a reference.
 
