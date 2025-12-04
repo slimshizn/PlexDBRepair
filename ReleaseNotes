@@ -8,6 +8,10 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.13.02
+
+  1. Autoincrement        - Adjust statistics_bandwidth table per Plex engineering suggestion.
+
 v1.13.01
 
   1. Tag sort order       - Github tags are not guaranteed to be numeric or in most-recent order.

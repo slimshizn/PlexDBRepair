@@ -2,12 +2,12 @@
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
 # Maintainer: ChuckPa                                                   #
-# Version:    v1.13.01                                                  #
-# Date:       14-Nov-2025                                               #
+# Version:    v1.13.02                                                  #
+# Date:       04-Dec-2025                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.13.01"
+Version="v1.13.02"
 
 # Have the databases passed integrity checks
 CheckedDB=0
@@ -1462,9 +1462,12 @@ DoDeflate() {
     -- Exclusive DB access
     BEGIN IMMEDIATE;
 
+    -- Remove old temp table if exists
+    DROP TABLE IF EXISTS temp_bandwidth;
+
     -- Create new table
     CREATE TABLE temp_bandwidth (
-      id INTEGER PRIMARY KEY,
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       account_id INTEGER,
       device_id INTEGER,
       timespan INTEGER,
