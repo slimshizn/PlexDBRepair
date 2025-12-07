@@ -143,6 +143,18 @@ Enter command # -or- command name (4 char min) :
     Additional hosts and docker images can easily be supported in almost all cases with appropriate path
     information.   Please contact me as needed.
 
+### Gettting a usable command line session
+        1. Accessing a NAS
+            Open a terminal/command line window on your computer.
+            type: ssh admin-username@IP.addr.of.NAS
+        
+        2. Linux 
+            Open a terminal session and elevate to the root (sudo) user
+            
+        3. Windows  -- for Windows PMS hosts
+            Open a Command window
+            Follow the instructions for the Windows version of DBRepair
+
 
 ### General installation and usage instructions
 
