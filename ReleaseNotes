@@ -8,6 +8,16 @@
 ![Maintenance](https://img.shields.io/badge/Maintained-Yes-green.svg)
 
 # Release Info:
+v1.14.00
+
+  1. Full-Text Search     - Check and repair Full-Text Search (FTS) database indexes.
+                            Damaged indexes often manifests as "500" internal errors. (Collections)
+                            This release adds support for checking those indexes and rebuilding as needed.
+                            ( Full credit & thanks to @maxfield-allison for this great work )
+
+                            Do not be surprised if your Blobs DB has damaged indexes and needs repair.
+                            Even "Known Good" databases have shown FTS index problems.
+
 v1.13.02
 
   1. Autoincrement        - Adjust statistics_bandwidth table per Plex engineering suggestion.
