@@ -1,13 +1,14 @@
 #!/bin/bash
 #########################################################################
 # Database Repair Utility for Plex Media Server.                        #
-# Maintainer: ChuckPa                                                   #
-# Version:    v1.16.00                                                  #
-# Date:       23-Jun-2026                                               #
+# Copyright:  2022-2026: ChuckPa                                        #
+#             All Rights Reserved.                                      #
+# Version:    v1.17.00                                                  #
+# Date:       02-Aug-2026                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.16.00"
+Version="v1.17.00"
 
 # Have the databases passed integrity checks
 CheckedDB=0
