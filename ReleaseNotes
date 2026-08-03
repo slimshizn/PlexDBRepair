@@ -20,8 +20,8 @@ v1.17.00
                           This existing BASH version continues to be primary tool until such time
                           it becomes production ready (perhaps 2027 timeframe).
 
-                           DBRepair.sh will be fully maintained and enhanced as needed by the community
-                           until such time as it's retired to Legacy Archive status. 
+                        - DBRepair.sh will be fully maintained and enhanced as needed by the community
+                          until such time as it's retired to Legacy Archive status. 
 
 
 v1.16.00
