@@ -2599,12 +2599,12 @@ do
           Output "FTS indexes are damaged. Attempting automatic FTS rebuild..."
           WriteLog "Auto    - FTS damaged, attempting rebuild"
 
-          if DoFTSRebuild; then
-            WriteLog "Auto    - FTS Rebuild - PASS"
-            Output "FTS rebuild successful."
+          if DoFTSRebuild && CheckFTS "Auto   "; then
+            WriteLog "Auto    - FTS Rebuild - PASS (verified)"
+            Output "FTS rebuild successful and verified clean."
           else
-            WriteLog "Auto    - FTS Rebuild - FAIL"
-            Output "FTS rebuild failed. You may need to run 'reindex' command manually."
+            WriteLog "Auto    - FTS Rebuild - FAIL (unverified or still damaged)"
+            Output "FTS rebuild did not produce a verified-clean index. You may need to run 'reindex' command manually."
             # Don't fail auto entirely - main DB repair succeeded
           fi
         else
@@ -2714,12 +2714,12 @@ do
               Output "FTS indexes are damaged. Rebuilding..."
               WriteLog "Reindex - FTS damaged, attempting rebuild"
 
-              if DoFTSRebuild; then
-                WriteLog "Reindex - FTS Rebuild - PASS"
-                Output "FTS rebuild successful."
+              if DoFTSRebuild && CheckFTS "Reindex"; then
+                WriteLog "Reindex - FTS Rebuild - PASS (verified)"
+                Output "FTS rebuild successful and verified clean."
               else
-                WriteLog "Reindex - FTS Rebuild - FAIL"
-                Output "FTS rebuild failed."
+                WriteLog "Reindex - FTS Rebuild - FAIL (unverified or still damaged)"
+                Output "FTS rebuild did not produce a verified-clean index."
               fi
             else
               WriteLog "Reindex - FTS Check - PASS"
