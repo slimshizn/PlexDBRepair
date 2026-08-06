@@ -3,12 +3,12 @@
 # Database Repair Utility for Plex Media Server.                        #
 # Copyright:  2022-2026: ChuckPa                                        #
 #             All Rights Reserved.                                      #
-# Version:    v1.17.00                                                  #
-# Date:       02-Aug-2026                                               #
+# Version:    v1.17.01                                                  #
+# Date:       06-Aug-2026                                               #
 #########################################################################
 
 # Version for display purposes
-Version="v1.17.00"
+Version="v1.17.01"
 
 # Have the databases passed integrity checks
 CheckedDB=0
