@@ -1055,6 +1055,10 @@ DoIndex() {
 ##### FTS REBUILD
 DoFTSRebuild() {
 
+    # EMERGENCY PATCH
+    Output "Temporary Patch:  FTS Rebuilding disabled as of PMS 1.43.x and Plex discussions until resolved."
+    return 0 
+
     # Clear flags
     Damaged=0
     Fail=0
