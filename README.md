@@ -13,7 +13,16 @@
 
 ## Due to changes in PMS beginning with PMS 1.43.0,  
 
-#### DBRepair.sh -  HOLD - NEEDS PATCHING. 
+DBRepair.sh,  as currently written, is incompatible with PMS 1.43.0 and above.  It manifests as FTS "Malformed inverted index" errors
+Because of this,  major changes are coming. 
+
+1.   DBRepair.sh --  As it exists in the main repo,  has been patched to disable FTS repair.
+2.   Existing 1.17.x packages have been taken down for everyone's safety
+
+You may safely use it for normal optimization but it not address any FTS issues. 
+
+
+#### DBRepair.sh - NEEDS PATCHING. 
 - Falsely reports "Malformed inverted index" and marks the DB as damaged.
 This is the incompatibility showing itself.  This will be worked around. 
 
