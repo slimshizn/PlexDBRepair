@@ -23,7 +23,7 @@ This is the incompatibility showing itself.  This will be worked around.
 - I have temporarily patched the main DBRepair.sh to disable FTS (Text Search) repairs and removed the posted packages for everyone's safety.
 
   
-###Upcoming:
+### Upcoming:
 
 1.   All versions of PMS below 1.43.0  (including PMS 1.42.2 - Aug 2025) will no longer be supported due to SQL incompatibilities.     I cannot support two different database schemas.
 
