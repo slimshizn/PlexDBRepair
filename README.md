@@ -12,7 +12,7 @@
 # SPECIAL ANNOUNCEMENT:
 
 ## Due to changes in PMS beginning with PMS 1.43.0,   
-DBRepair.sh,  as currently written, is being phased out in favor of the program (compiled "C" version) I'm writing
+DBRepair.sh,  as currently written, is being phased out in favor of the program (compiled "C" version) I'm writing and almost ready for release.
 
 1.   DBRepair.sh --  As it exists in the main repo,  has been patched to disable FTS repair.   This is the safest to do as of 1.43.4  PMS now handles FTS entirely itself. 
 2.   Existing 1.17.x packages have been taken down for everyone's safety
