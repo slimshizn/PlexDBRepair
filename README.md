@@ -26,8 +26,7 @@ DBRepair (program) is stable and works for all but a few edge cases which I'm ad
 
 Please come to the  Plex Forum DBRepair Development thread to get the new program packages (ZIP file) 
 
-This is the current package post:    https://forums.plex.tv/t/dbrepair-development/822684/1151
-
+This is the current package post:   https://forums.plex.tv/t/dbrepair-development/822684/1270
 I will be updating it shortly
 
 I expect to go live production with regular releases again in late October - early November
