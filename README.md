@@ -30,6 +30,8 @@ This is the current package post:    https://forums.plex.tv/t/dbrepair-developme
 
 I will be updating it shortly
 
+I expect to go live production with regular releases again in late October - early November
+
 
 =============================================================================================================
 
