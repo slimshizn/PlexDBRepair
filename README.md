@@ -20,7 +20,7 @@ DBRepair.sh,  as currently written, is being phased out in favor of the program 
 You may safely use it for normal optimization but it not address any FTS issues. 
 
 
-#### DBRepair (program) 
+#### DBRepair (program) is comming SOON! 
 
 DBRepair (program) is stable and works for all but a few edge cases which I'm addressing now.   These edge cases are how DBRepair determines its host & identity.
 
